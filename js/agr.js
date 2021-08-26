@@ -77,8 +77,12 @@ function positiveCaseGraph(h_label, t_label, t_data, i_label, i_data, r_label, r
         ]
     };
 
+    //要素を取得
+    let element = document.getElementById('posCaseGraph');
+    //高さを設定
+    element.height = 80;
     //描画機能を有効化
-    let ctx2 = document.getElementById('posCaseGraph').getContext('2d');
+    let ctx2 = element.getContext('2d');
     //グラフを描画
     window.total = new Chart(ctx2, {
         type: 'bar',//"bar"指定でないと両方表示されないことに注意！

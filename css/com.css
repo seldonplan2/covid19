@@ -14,3 +14,21 @@ div#main {
     width: 95%;
     margin: auto;
 }
+
+/*グラフエリア*/
+div.graph {
+    overflow: scroll;
+}
+
+/*感染者数*/
+div.graph div.post_case {
+    width: 2000px;
+    height: 600px;
+}
+
+/*クレジット*/
+div.credit {
+    width: 100%;
+    text-align: center;
+    line-height: 80%;
+}
