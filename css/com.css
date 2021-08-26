@@ -1,0 +1,16 @@
+
+/*全体設定*/
+html, body {
+    height: 100%;
+    position: relative;
+    z-index: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", Meiryo, "メイリオ", sans-serif;
+    font-size: 14px;
+    color: black;
+}
+
+/*メインボディ*/
+div#main {
+    width: 95%;
+    margin: auto;
+}
