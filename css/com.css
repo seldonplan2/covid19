@@ -22,12 +22,14 @@ div.graph {
 
 /*感染者数*/
 div.graph div.post_case {
+    margin: auto;
     width: 2000px;
     height: 600px;
 }
 
 /*クレジット*/
 div.credit {
+    height: 120px;
     width: 100%;
     text-align: center;
     line-height: 80%;
