@@ -1,3 +1,10 @@
+
+//ポインタ半径
+const Radius = 0;
+
+//ポインタが表示される境界半径
+const HitRadius = 5;
+
 /**
  * カラー設定
  *
@@ -5,10 +12,18 @@
  */
 const agrChartColors = {
     red: 'rgb(255, 99, 132)',
+    pink: 'rgb(255,146,157)',
+    lightpink: 'rgb(255,182,193)',
     orange: 'rgb(255, 159, 64)',
     yellow: 'rgb(255, 205, 86)',
-    green: 'rgb(75, 192, 192)',
+    darkgreen: 'rgb(0,105,52)',
+    seagreen:'rgb(0,145,58)',
+    green: 'rgb(3,169,33)',
+    darkblue: 'rgb(0,91,172)',
     blue: 'rgb(54, 162, 235)',
+    steelblue : 'rgb(99,151,208)',
+    skyblue: 'rgb(54, 162, 235)',
+    mizuiro: 'rgb(193,218,239)',
     purple: 'rgb(153, 102, 255)',
     grey: 'rgb(201, 203, 207)'
 };
@@ -26,7 +41,7 @@ function transparentize(color, opacity) {
 }
 
 /**
- * 陽性者比較グラフ
+ * 東京-全国 感染者数比較グラフ
  *
  * @param h_label
  * @param t_label
@@ -37,7 +52,7 @@ function transparentize(color, opacity) {
  * @param r_data
  * @param title
  */
-function positiveCaseGraph(h_label, t_label, t_data, i_label, i_data, r_label, r_data, title) {
+function tokyoDomPostCaseGraph(h_label, t_label, t_data, i_label, i_data, r_label, r_data, title) {
     //チャートデータ
     let c_data = {
         labels: h_label,
@@ -45,9 +60,9 @@ function positiveCaseGraph(h_label, t_label, t_data, i_label, i_data, r_label, r
             //東京/全国
             {
                 type: 'line',
-                backgroundColor: agrChartColors.blue,
-                borderColor: agrChartColors.blue,
-                borderWidth: 3,
+                backgroundColor: agrChartColors.skyblue,
+                borderColor: agrChartColors.skyblue,
+                borderWidth: 2,
                 pointRadius: 0,
                 data: r_data,
                 label: r_label,
@@ -78,7 +93,7 @@ function positiveCaseGraph(h_label, t_label, t_data, i_label, i_data, r_label, r
     };
 
     //要素を取得
-    let element = document.getElementById('posCaseGraph');
+    let element = document.getElementById('tokyoDomPosCaseGraph');
     //高さを設定
     element.height = 80;
     //描画機能を有効化
@@ -101,6 +116,10 @@ function positiveCaseGraph(h_label, t_label, t_data, i_label, i_data, r_label, r
             elements: {
                 line: {
                     tension: 0.000001
+                },
+                point: {
+                    radius: Radius,
+                    hitRadius: HitRadius,
                 }
             },
             scales: {
@@ -125,6 +144,98 @@ function positiveCaseGraph(h_label, t_label, t_data, i_label, i_data, r_label, r
                     },
                     ],
             }
+        }
+    });
+}
+
+function spPrefDomPostCaseGraph(h_label, t_label, t_data, o_label, o_data, a_label, a_data, art_label, art_data, aro_label, aro_data, ara_label, ara_data, title) {
+    //チャートデータ
+    let c_data = {
+        labels: h_label,
+        datasets: [
+            //東京
+            {
+                type: 'line',
+                label: t_label,
+                backgroundColor: agrChartColors.red,
+                data: t_data,
+                borderColor: agrChartColors.red,
+            },
+            //東京近郊(埼玉,千葉,神奈川)
+            {
+                type: 'line',
+                label: art_label,
+                backgroundColor: agrChartColors.orange,
+                data: art_data,
+                borderColor: agrChartColors.orange,
+            },
+            //大阪
+            {
+                type: 'line',
+                label: o_label,
+                backgroundColor: agrChartColors.darkblue,
+                data: o_data,
+                borderColor: agrChartColors.darkblue,
+            },
+            //大阪近郊(京都,兵庫,奈良)
+            {
+                type: 'line',
+                label: aro_label,
+                backgroundColor: agrChartColors.steelblue,
+                data: aro_data,
+                borderColor: agrChartColors.steelblue,
+            },
+            //愛知
+            {
+                type: 'line',
+                label: a_label,
+                backgroundColor: agrChartColors.darkgreen,
+                data: a_data,
+                borderColor: agrChartColors.darkgreen,
+            },
+            //愛知近郊(岐阜,静岡,三重)
+            {
+                type: 'line',
+                label: ara_label,
+                backgroundColor: agrChartColors.seagreen,
+                data: ara_data,
+                borderColor: agrChartColors.seagreen,
+            },
+        ]
+    };
+
+    //要素を取得
+    let element = document.getElementById('spPrefDomPosCaseGraph');
+    //高さを設定
+    element.height = 80;
+    //描画機能を有効化
+    let ctx2 = element.getContext('2d');
+    //グラフを描画
+    window.total = new Chart(ctx2, {
+        type: 'bar',//"bar"指定でないと両方表示されないことに注意！
+        data: c_data,
+        options: {
+            title: {
+                text: title,
+                display: true
+            },
+            //複数表示に必要？
+            tooltips: {
+                mode: 'index',
+                intersect: true
+            },
+            //ラインを曲線に"しない"指定
+            elements: {
+                line: {
+                    tension: 0.000001,
+                    fill: false,
+                    borderWidth: 2,
+                },
+                point: {
+                    radius: Radius,
+                    hitRadius: HitRadius,
+                }
+            },
         }
     });
 }
