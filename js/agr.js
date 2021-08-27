@@ -40,22 +40,31 @@ function transparentize(color, opacity) {
     return Color(color).alpha(alpha).rgbString();
 }
 
+//東京-全国 感染者数グラフ用データオブジェクト
+let tokyoDomPostCaseObj = {
+    title :'',
+    horizontal :[],
+    dom_data :{
+        label :'',
+        data :[],
+    },
+    tokyo_data :{
+        label :'',
+        data :[],
+    },
+    rate_data :{
+        label :'',
+        data :[],
+    },
+};
+
 /**
  * 東京-全国 感染者数比較グラフ
- *
- * @param h_label
- * @param t_label
- * @param t_data
- * @param i_label
- * @param i_data
- * @param r_label
- * @param r_data
- * @param title
  */
-function tokyoDomPostCaseGraph(h_label, t_label, t_data, i_label, i_data, r_label, r_data, title) {
+function tokyoDomPostCaseGraph() {
     //チャートデータ
     let c_data = {
-        labels: h_label,
+        labels: tokyoDomPostCaseObj.horizontal,
         datasets: [
             //東京/全国
             {
@@ -64,17 +73,17 @@ function tokyoDomPostCaseGraph(h_label, t_label, t_data, i_label, i_data, r_labe
                 borderColor: agrChartColors.skyblue,
                 borderWidth: 2,
                 pointRadius: 0,
-                data: r_data,
-                label: r_label,
+                data: tokyoDomPostCaseObj.rate_data.data,
+                label: tokyoDomPostCaseObj.rate_data.label,
                 fill: false,
                 yAxisID: 'y-axis-2',
             },
             //東京
             {
                 type: 'bar',
-                label: i_label,
+                label: tokyoDomPostCaseObj.tokyo_data.label,
                 backgroundColor: agrChartColors.red,
-                data: i_data,
+                data: tokyoDomPostCaseObj.tokyo_data.data,
                 borderColor: agrChartColors.red,
                 borderWidth: 2,
                 yAxisID: 'y-axis-1',//命名は"y-axis-連番"でないといけない(みたい
@@ -84,8 +93,8 @@ function tokyoDomPostCaseGraph(h_label, t_label, t_data, i_label, i_data, r_labe
                 type: 'line',
                 backgroundColor: transparentize(agrChartColors.yellow),
                 borderColor: agrChartColors.yellow,
-                data: t_data,
-                label: t_label,
+                data: tokyoDomPostCaseObj.dom_data.data,
+                label: tokyoDomPostCaseObj.dom_data.label,
                 fill: 'start',
                 yAxisID: 'y-axis-1',
             },
@@ -104,7 +113,7 @@ function tokyoDomPostCaseGraph(h_label, t_label, t_data, i_label, i_data, r_labe
         data: c_data,
         options: {
             title: {
-                text: title,
+                text: tokyoDomPostCaseObj.title,
                 display: true
             },
             //複数表示に必要？
@@ -142,63 +151,96 @@ function tokyoDomPostCaseGraph(h_label, t_label, t_data, i_label, i_data, r_labe
                             drawOnChartArea: false,
                         },
                     },
-                    ],
+                ],
             }
         }
     });
 }
 
-function spPrefDomPostCaseGraph(h_label, t_label, t_data, o_label, o_data, a_label, a_data, art_label, art_data, aro_label, aro_data, ara_label, ara_data, title) {
+//主要都道府県・地域 感染者数推移グラフ用データオブジェクト
+let spPrefDomPostCaseObj = {
+    title :'',
+    horizontal :[],
+    tokyo_data :{
+        label :'',
+        data :[],
+    },
+    tokyo_around_data :{
+        label :'',
+        data :[],
+    },
+    osaka_data :{
+        label :'',
+        data :[],
+    },
+    osaka_around_data :{
+        label :'',
+        data :[],
+    },
+    aichi_data :{
+        label :'',
+        data :[],
+    },
+    aichi_around_data :{
+        label :'',
+        data :[],
+    },
+};
+
+/**
+ * 主要都道府県・地域 感染者数推移グラフ
+ */
+function spPrefDomPostCaseGraph() {
     //チャートデータ
     let c_data = {
-        labels: h_label,
+        labels: spPrefDomPostCaseObj.horizontal,
         datasets: [
             //東京
             {
                 type: 'line',
-                label: t_label,
+                label: spPrefDomPostCaseObj.tokyo_data.label,
+                data: spPrefDomPostCaseObj.tokyo_data.data,
                 backgroundColor: agrChartColors.red,
-                data: t_data,
                 borderColor: agrChartColors.red,
             },
             //東京近郊(埼玉,千葉,神奈川)
             {
                 type: 'line',
-                label: art_label,
+                label: spPrefDomPostCaseObj.tokyo_around_data.label,
+                data: spPrefDomPostCaseObj.tokyo_around_data.data,
                 backgroundColor: agrChartColors.orange,
-                data: art_data,
                 borderColor: agrChartColors.orange,
             },
             //大阪
             {
                 type: 'line',
-                label: o_label,
+                label: spPrefDomPostCaseObj.osaka_data.label,
+                data: spPrefDomPostCaseObj.osaka_data.data,
                 backgroundColor: agrChartColors.darkblue,
-                data: o_data,
                 borderColor: agrChartColors.darkblue,
             },
             //大阪近郊(京都,兵庫,奈良)
             {
                 type: 'line',
-                label: aro_label,
+                label: spPrefDomPostCaseObj.osaka_around_data.label,
+                data: spPrefDomPostCaseObj.osaka_around_data.data,
                 backgroundColor: agrChartColors.steelblue,
-                data: aro_data,
                 borderColor: agrChartColors.steelblue,
             },
             //愛知
             {
                 type: 'line',
-                label: a_label,
+                label: spPrefDomPostCaseObj.aichi_data.label,
+                data: spPrefDomPostCaseObj.aichi_data.data,
                 backgroundColor: agrChartColors.darkgreen,
-                data: a_data,
                 borderColor: agrChartColors.darkgreen,
             },
             //愛知近郊(岐阜,静岡,三重)
             {
                 type: 'line',
-                label: ara_label,
+                label: spPrefDomPostCaseObj.aichi_around_data.label,
+                data: spPrefDomPostCaseObj.aichi_around_data.data,
                 backgroundColor: agrChartColors.seagreen,
-                data: ara_data,
                 borderColor: agrChartColors.seagreen,
             },
         ]
@@ -216,7 +258,7 @@ function spPrefDomPostCaseGraph(h_label, t_label, t_data, o_label, o_data, a_lab
         data: c_data,
         options: {
             title: {
-                text: title,
+                text: spPrefDomPostCaseObj.title,
                 display: true
             },
             //複数表示に必要？
