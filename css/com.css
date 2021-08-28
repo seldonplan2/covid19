@@ -27,8 +27,25 @@ div.graph div.post_case {
     height: 600px;
 }
 
+/*グラフエリア*/
+div.graph {
+    overflow: scroll;
+}
+
+div.graph:nth-of-type(n + 2), div.bubble {
+    margin-top: 60px;
+}
+
+/*グラフエリア*/
+div.bubble div.rate {
+    margin: auto;
+    width: 1000px;
+    height: 650px;
+}
+
 /*クレジット*/
 div.credit {
+    margin-top: 40px;
     height: 120px;
     width: 100%;
     text-align: center;
