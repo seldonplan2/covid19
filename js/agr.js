@@ -24,7 +24,7 @@ const agrChartColors = {
     steelblue : 'rgb(99,151,208)',
     skyblue: 'rgb(54, 162, 235)',
     mizuiro: 'rgb(193,218,239)',
-    purple: 'rgb(153, 102, 255)',
+    purple: 'rgb(142,104,229)',
     grey: 'rgb(201, 203, 207)'
 };
 
@@ -390,6 +390,117 @@ function vaccinePostCaseRateGraph(title, data) {
                     },
                 }
             },
+        }
+    });
+}
+
+/**
+ * 曜日別感染者増加率と感染者数比較グラフ
+ *
+ * @param title: グラフタイトル
+ * @param increase_rate_data: 増加率データ
+ * @param pc_rate_date: 感染率データ
+ * @param pc_num_data: 感染者数データ
+ * @param labels: X軸ラベル
+ */
+function postCaseRateIncreaseGraph(title, increase_rate_data, pc_rate_date, pc_num_data, labels) {
+    //初期化
+    let bkg_color = [];
+    let border_color = [];
+
+    //増加率グラフの色を指定
+    //増加率データを呼び出し
+    $.each(increase_rate_data, function(idx, value) {
+        //0以上の場合
+        if(0 < value){
+            bkg_color.push(agrChartColors.red);
+            border_color.push(agrChartColors.red);
+        //その他
+        }else{
+            bkg_color.push(agrChartColors.blue);
+            border_color.push(agrChartColors.blue);
+        }
+    });
+
+    //チャートデータ
+    let c_data = {
+        labels: labels,
+        datasets: [
+            //増加率
+            {
+                label: '増加率',
+                data: increase_rate_data,
+                backgroundColor: bkg_color,
+                borderColor: border_color,
+                borderWidth: 2,
+                yAxisID: 'y-axis-1',
+            },
+            //感染率
+            {
+                label: '感染率',
+                data: pc_rate_date,
+                backgroundColor: agrChartColors.purple,
+                borderColor: agrChartColors.purple,
+                borderWidth: 2,
+                yAxisID: 'y-axis-2',
+            },
+        ]
+    };
+
+    //要素を取得
+    let element = document.getElementById('postCaseRateIncreaseGraph');
+    //高さを設定
+    element.height = 80;
+    //描画機能を有効化
+    let ctx2 = element.getContext('2d');
+    //グラフを描画
+    window.total = new Chart(ctx2, {
+        type: 'bar',
+        data: c_data,
+        options: {
+            title: {
+                text: title,
+                display: true
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: true,
+                callbacks: {
+                    //ラベル
+                    label: function (tooltipItem, data) {
+                        let tooltip = data.datasets[tooltipItem.datasetIndex];
+                        //初期化
+                        let str = '';
+                        //感染率の場合、感染者数を追加
+                        if(tooltip.yAxisID === 'y-axis-2')str = ' (' + parseInt(pc_num_data[tooltipItem.index]).toLocaleString() + '人)';
+                        //
+                        return tooltip.label + ': ' + tooltipItem.value + '%' + str;
+                    },
+                }
+            },
+            // スケール
+            scales: {
+                yAxes: [
+                    //増加率
+                    {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        id: 'y-axis-1',
+                    },
+                    //感染率
+                    {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        id: 'y-axis-2',
+                        //グリッドラインを非表示にする設定
+                        gridLines: {
+                            drawOnChartArea: false,
+                        },
+                        stacked: true,
+                    }],
+            }
         }
     });
 }
