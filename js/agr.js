@@ -24,7 +24,9 @@ const agrChartColors = {
     steelblue : 'rgb(99,151,208)',
     skyblue: 'rgb(54, 162, 235)',
     mizuiro: 'rgb(193,218,239)',
-    purple: 'rgb(142,104,229)',
+    purple: 'rgb(132,89,229)',
+    mediumvioletred: 'rgb(199,21,133)',
+    umeMurasaki: 'rgb(170,76,143)',
     grey: 'rgb(201, 203, 207)'
 };
 
@@ -417,8 +419,8 @@ function postCaseRateIncreaseGraph(title, increase_rate_data, pc_rate_date, pc_n
             border_color.push(agrChartColors.red);
         //その他
         }else{
-            bkg_color.push(agrChartColors.blue);
-            border_color.push(agrChartColors.blue);
+            bkg_color.push(agrChartColors.orange);
+            border_color.push(agrChartColors.orange);
         }
     });
 
@@ -439,8 +441,8 @@ function postCaseRateIncreaseGraph(title, increase_rate_data, pc_rate_date, pc_n
             {
                 label: '感染率',
                 data: pc_rate_date,
-                backgroundColor: agrChartColors.purple,
-                borderColor: agrChartColors.purple,
+                backgroundColor: agrChartColors.blue,
+                borderColor: agrChartColors.blue,
                 borderWidth: 2,
                 yAxisID: 'y-axis-2',
             },
@@ -499,7 +501,9 @@ function postCaseRateIncreaseGraph(title, increase_rate_data, pc_rate_date, pc_n
                             drawOnChartArea: false,
                         },
                         stacked: true,
-                    }],
+                    },
+                    ],
+
             }
         }
     });
