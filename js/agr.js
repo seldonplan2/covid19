@@ -42,141 +42,6 @@ function transparentize(color, opacity) {
     return Color(color).alpha(alpha).rgbString();
 }
 
-//東京-全国 感染者数グラフ用データオブジェクト
-let tokyoDomPostCaseObj = {
-    title :'',
-    horizontal :[],
-    dom_data :{
-        label :'',
-        data :[],
-    },
-    tokyo_data :{
-        label :'',
-        data :[],
-    },
-    rate_data :{
-        label :'',
-        data :[],
-    },
-};
-
-/**
- * 東京-全国 感染者数比較グラフ
- */
-function tokyoDomPostCaseGraph() {
-
-    //東京/全国のデータを呼び出し
-    tokyoDomPostCaseObj.rate_data.data.forEach(function(data, index) {
-        //%表記用に100倍にする
-        tokyoDomPostCaseObj.rate_data.data[index] = Math.trunc(data * 100);
-    });
-
-    //チャートデータ
-    let c_data = {
-        labels: tokyoDomPostCaseObj.horizontal,
-        datasets: [
-            //東京/全国
-            {
-                type: 'line',
-                backgroundColor: agrChartColors.skyblue,
-                borderColor: agrChartColors.skyblue,
-                borderWidth: 2,
-                pointRadius: 0,
-                data: tokyoDomPostCaseObj.rate_data.data,
-                label: tokyoDomPostCaseObj.rate_data.label,
-                fill: false,
-                yAxisID: 'y-axis-2',
-            },
-            //東京
-            {
-                type: 'bar',
-                backgroundColor: agrChartColors.red,
-                borderColor: agrChartColors.red,
-                borderWidth: 2,
-                label: tokyoDomPostCaseObj.tokyo_data.label,
-                data: tokyoDomPostCaseObj.tokyo_data.data,
-                yAxisID: 'y-axis-1',//命名は"y-axis-連番"でないといけない(みたい
-            },
-            //全国
-            {
-                type: 'line',
-                backgroundColor: transparentize(agrChartColors.yellow),
-                borderColor: agrChartColors.yellow,
-                data: tokyoDomPostCaseObj.dom_data.data,
-                label: tokyoDomPostCaseObj.dom_data.label,
-                fill: 'start',
-                yAxisID: 'y-axis-1',
-            },
-        ]
-    };
-
-    //要素を取得
-    let element = document.getElementById('tokyoDomPosCaseGraph');
-    //高さを設定
-    element.height = 80;
-    //描画機能を有効化
-    let ctx2 = element.getContext('2d');
-    //グラフを描画
-    window.total = new Chart(ctx2, {
-        type: 'bar',//"bar"指定でないと両方表示されないことに注意！
-        data: c_data,
-        options: {
-            title: {
-                text: tokyoDomPostCaseObj.title,
-                display: true
-            },
-            //複数表示に必要？
-            tooltips: {
-                mode: 'index',
-                intersect: true,
-                callbacks: {
-                    //ラベル
-                    label: function (tooltipItem, data) {
-                        let tooltip = data.datasets[tooltipItem.datasetIndex];
-                        if(tooltipItem.datasetIndex === 0){
-                            return tooltip.label + ': ' + tooltipItem.value + '%';
-                        }else{
-                            return tooltip.label + ': ' + parseInt(tooltipItem.value).toLocaleString() + '人';
-                        }
-                    },
-                }
-            },
-            //ラインを曲線に"しない"指定
-            elements: {
-                line: {
-                    tension: 0.000001
-                },
-                point: {
-                    radius: Radius,
-                    hitRadius: HitRadius,
-                }
-            },
-            scales: {
-                yAxes: [
-                    //全国
-                    {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        id: 'y-axis-1',
-                    },
-                    //東京/全国
-                    {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        id: 'y-axis-2',
-                        //グリッドラインを非表示にする設定
-                        gridLines: {
-                            drawOnChartArea: false,
-                        },
-                    },
-                ],
-            }
-        }
-    });
-}
-
 //主要都道府県・地域 感染者数推移グラフ用データオブジェクト
 let spPrefDomPostCaseObj = {
     title :'',
@@ -202,6 +67,10 @@ let spPrefDomPostCaseObj = {
         data :[],
     },
     aichi_around_data :{
+        label :'',
+        data :[],
+    },
+    okinawa_data :{
         label :'',
         data :[],
     },
@@ -263,6 +132,14 @@ function spPrefDomPostCaseGraph() {
                 backgroundColor: agrChartColors.seagreen,
                 borderColor: agrChartColors.seagreen,
             },
+            //沖縄
+            {
+                type: 'line',
+                label: spPrefDomPostCaseObj.okinawa_data.label,
+                data: spPrefDomPostCaseObj.okinawa_data.data,
+                backgroundColor: agrChartColors.umeMurasaki,
+                borderColor: agrChartColors.umeMurasaki,
+            },
         ]
     };
 
@@ -312,7 +189,7 @@ function spPrefDomPostCaseGraph() {
 /**
  * 主要都道府県・地域 感染者数推移グラフ
  */
-function vaccinePostCaseRateGraph(title, data) {
+function vaccinePostCaseRateGraph(title, pre_label, now_label, data) {
 
     //チャートデータ
     let c_data = {
@@ -367,7 +244,7 @@ function vaccinePostCaseRateGraph(title, data) {
                 xAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: '1回目',
+                        labelString: pre_label,
                         fontColor: 'black',
                         fontSize: 16,
                     },
@@ -376,7 +253,7 @@ function vaccinePostCaseRateGraph(title, data) {
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: '2回目',
+                        labelString: now_label,
                         fontColor: 'black',
                         fontSize: 16,
                     },
