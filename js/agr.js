@@ -42,6 +42,112 @@ function transparentize(color, opacity) {
     return Color(color).alpha(alpha).rgbString();
 }
 
+//全国 死者・感染者数推移グラフ用データオブジェクト
+let allDomDataObj = {
+    title :'',
+    horizontal :[],
+    p_case_data :{
+        label :'',
+        data :[],
+    },
+    death_data :{
+        label :'',
+        data :[],
+    },
+};
+
+/**
+ * 全国 死者・感染者数推移グラフ
+ */
+function allDomDataGraph() {
+
+    //チャートデータ
+    let c_data = {
+        labels: allDomDataObj.horizontal,
+        datasets: [
+            //死者
+            {
+                type: 'line',
+                label: allDomDataObj.death_data.label,
+                data: allDomDataObj.death_data.data,
+                backgroundColor: agrChartColors.red,
+                borderColor: agrChartColors.red,
+                fill: false,
+                yAxisID: 'y-axis-1',
+            },
+            //全国
+            {
+                type: 'line',
+                label: allDomDataObj.p_case_data.label,
+                data: allDomDataObj.p_case_data.data,
+                backgroundColor: transparentize(agrChartColors.yellow),
+                borderColor: agrChartColors.yellow,
+                fill: true,
+                yAxisID: 'y-axis-2',//命名は"y-axis-連番"でないといけない(みたい
+            },
+        ]
+    };
+
+    //要素を取得
+    let element = document.getElementById('allDomDataGraph');
+    //高さを設定
+    element.height = 80;
+    //描画機能を有効化
+    let ctx2 = element.getContext('2d');
+    //グラフを描画
+    window.total = new Chart(ctx2, {
+        type: 'bar',//"bar"指定でないと両方表示されないことに注意！
+        data: c_data,
+        options: {
+            title: {
+                text: allDomDataObj.title,
+                display: true
+            },
+            //複数表示に必要？
+            tooltips: {
+                mode: 'index',
+                intersect: true,
+                callbacks: {
+                    //ラベル
+                    label: function (tooltipItem, data) {
+                        let tooltip = data.datasets[tooltipItem.datasetIndex];
+                        return tooltip.label + ': ' + parseInt(tooltipItem.value).toLocaleString() + '人';
+                    },
+                }
+            },
+            //ラインを曲線に"しない"指定
+            elements: {
+                line: {
+                    tension: 0.000001,
+                    borderWidth: 2,
+                },
+                point: {
+                    radius: Radius,
+                    hitRadius: HitRadius,
+                }
+            },
+            scales: {
+                yAxes: [
+                    {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        id: 'y-axis-1',
+                    },
+                    //東京/全国
+                    {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        id: 'y-axis-2',
+                    },
+
+                ],
+            }
+        }
+    });
+}
+
 //主要都道府県・地域 感染者数推移グラフ用データオブジェクト
 let spPrefDomPostCaseObj = {
     title :'',
